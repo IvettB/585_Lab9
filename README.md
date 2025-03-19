@@ -1,6 +1,6 @@
 # Zero Knowledge Proof (ZKP) Report
 
-## 1. Captured Data from Successful Run
+## 1. Successful Run
 
 ### Step 3 - Client Signature
 - **Captured Data:**
@@ -57,7 +57,7 @@ The server now checks the proof sent by the client. If the proof is valid, it co
 
 ---
 
-## 2. Captured Data from Unsuccessful Run
+## 2. Unsuccessful Run
 
 ### Step 3 - Client Signature
 - **Captured Data:**  
