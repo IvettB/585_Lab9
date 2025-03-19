@@ -1,4 +1,4 @@
-# Zero Knowledge Proof (ZKP) Lab Report
+# Zero Knowledge Proof (ZKP) Report
 
 ## 1. Captured Data from Successful Run
 
@@ -11,7 +11,7 @@
 - **Input Data:** User-entered password (first prompt)
 - **ZKP Step:** **Step 3 - Client creates a signature from their password and sends it to the server**
 - **Plain Language Description:**  
-The client (user) needs to prove that they know the correct password without revealing it. Instead of sending the actual password, the client generates a **digital signature** using cryptographic techniques. This signature is created using a mathematical algorithm that transforms the password into a unique encoded value. This ensures that even if someone intercepted the signature, they would not be able to determine the original password. The signature is then sent to the server, which will use it later to verify that the user knows the password.
+At this step, the client (user) enters their password when prompted. However, the actual password is never sent to the server. Instead, the program uses a cryptographic function to transform the password into a digital signature. This signature acts as a mathematical proof that the client knows the correct password, without revealing what the password actually is. The transformation applied to the password is one-way, meaning that even if an attacker intercepted the signature, they would not be able to reverse it to determine the original password. This ensures that the password remains secret while still allowing the client to prove their knowledge of it.
 
 ---
 
@@ -24,7 +24,7 @@ The client (user) needs to prove that they know the correct password without rev
 - **Input Data:** The client’s signature from Step 3
 - **ZKP Step:** **Step 6 - Server sends a signed token back to the client**
 - **Plain Language Description:**  
-After receiving the client’s signature, the server needs to challenge the client to confirm that they actually possess the correct password. To do this, the server creates a **unique challenge token**, which is essentially a random value that the client must sign in the next step. The server digitally signs this token itself, ensuring that the token cannot be modified or faked. This step helps prevent replay attacks, where an attacker might try to reuse a previously intercepted signature.
+After getting the user’s signature, the server must check if they really know the password. To do this, the server creates a special challenge token, which is just a random code the user must sign next. The server also signs this token to make sure no one can change or fake it. This step stops attackers from reusing an old stolen signature to trick the system.
 
 ---
 
@@ -38,8 +38,10 @@ eyJwYXJhbXMiOnsiYWxnIjoic2hhM18yNTYiLCJjdXJ2ZSI6InNlY3AyNTZrMSIsInMiOjgyODE1MDMw
 - **Input Data:** User-entered password (second prompt) + received token from Step 6
 - **ZKP Step:** **Step 8 - Client generates a proof using the password and token**
 - **Plain Language Description:**  
-To prove that they truly know the password, the client must now sign the token received from the server. This signing process depends on the second password input. If the client enters the same password as before, the signature will be valid and will match the expected proof. However, if the password is different, the signature will not match. This step is crucial because it ensures that the client is proving knowledge of the password **without revealing what the password actually is**. The client then sends this proof back to the server.
-
+The client must now prove they know the password by signing the challenge token received from the server. The client enters their password again, and the program uses it to generate a cryptographic proof based on both the password and the token.
+If the second password matches the first, the proof is valid and will be accepted by the server.
+If the password is different, the proof will be invalid, and authentication will fail.
+The proof is sent to the server for final verification.
 ---
 
 ### Step 10 - Authentication Result
@@ -51,7 +53,7 @@ To prove that they truly know the password, the client must now sign the token r
 - **Input Data:** The server's verification of the proof
 - **ZKP Step:** **Step 10 - Server verifies proof and sends authentication result**
 - **Plain Language Description:**  
-The server now checks the proof sent by the client. If the proof is valid, it confirms that the client knows the correct password and the authentication is successful. The server then sends back a **Success!** message. Since the client never actually sent the password, the server does not store or learn the actual password—only whether the proof is correct. This maintains the security and confidentiality of the authentication process.
+The server now checks the proof sent by the client. If the proof is valid, it confirms that the client knows the correct password and the authentication is successful. The server then sends back a `Success!` message. Since the client never actually sent the password, the server does not store or learn the actual password—only whether the proof is correct.
 
 ---
 
@@ -66,7 +68,7 @@ The server now checks the proof sent by the client. If the proof is valid, it co
 - **Input Data:** User-entered password (first prompt)
 - **ZKP Step:** **Step 3 - Client creates a signature from their password and sends it to the server**
 - **Plain Language Description:**  
-This step is identical to the successful run. The client generates a cryptographic signature based on the first password entered and sends it to the server.
+This step is identical to the Success version. The client generates a cryptographic signature based on the first password entered and sends it to the server.
 
 ---
 
@@ -79,7 +81,7 @@ This step is identical to the successful run. The client generates a cryptograph
 - **Input Data:** The client’s signature from Step 3
 - **ZKP Step:** **Step 6 - Server sends a signed token back to the client**
 - **Plain Language Description:**  
-The server generates a new challenge token, just as in the successful run, and sends it to the client. Since the client’s first password was the same, this token generation process is consistent.
+The server generates a new challenge token, just as in the Success version, and sends it to the client.
 
 ---
 
@@ -93,7 +95,7 @@ eyJwYXJhbXMiOnsiYWxnIjoic2hhM18yNTYiLCJjdXJ2ZSI6InNlY3AyNTZrMSIsInMiOjY0Mjk1NTA0
 - **Input Data:** **(Incorrect)** second password + received token from Step 6
 - **ZKP Step:** **Step 8 - Client generates a proof using the password and token**
 - **Plain Language Description:**  
-In this run, the client mistakenly enters a different second password. Because the proof is created using this password, it will **not match** the expected proof that the server is looking for. Since the proof is incorrect, the server will recognize that the client does **not** actually know the correct password.
+In this run, the client mistakenly enters a different second password. Because the proof is created using this password, it will not match the expected proof that the server is looking for. Since the proof is incorrect, the server will recognize that the client does not know the correct password.
 
 ---
 
@@ -106,7 +108,7 @@ In this run, the client mistakenly enters a different second password. Because t
 - **Input Data:** The server's verification of the proof
 - **ZKP Step:** **Step 10 - Server verifies proof and sends authentication result**
 - **Plain Language Description:**  
-The server verifies the proof and finds that it is invalid. This happens because the proof was generated using the wrong password, so it does not match what the server expected. As a result, authentication **fails**. This demonstrates that an attacker who does not know the password cannot trick the server into granting access.
+The server verifies the proof and finds that it is invalid. This happens because the proof was generated using the wrong password, so it does not match what the server expected. As a result, authentication fails.
 
 ---
 
@@ -114,27 +116,21 @@ The server verifies the proof and finds that it is invalid. This happens because
 
 ### Completeness
 - **Definition:** If the prover (client) is honest and provides correct input, the verifier (server) will always accept the proof.
-- **Does the program meet this requirement?** ✅ **Yes**
+- **Does the program meet this requirement?** YES
 - **Explanation:** The successful authentication proves that when the correct password is used, authentication is always granted.
 
 ---
 
 ### Soundness
 - **Definition:** A cheating prover (client) cannot convince the verifier (server) without actually knowing the password.
-- **Does the program meet this requirement?** ✅ **Yes**
-- **Explanation:** The unsuccessful authentication attempt proves that entering the wrong password leads to authentication failure, ensuring that an attacker cannot fake knowledge of the password.
+- **Does the program meet this requirement?** YES
+- **Explanation:** The unsuccessful authentication attempt proves that entering the wrong password leads to authentication failure, ensuring that an attacker cannot pretend to have knowledge of the password.
 
 ---
 
 ### Zero Knowledge
 - **Definition:** The verifier (server) does not learn any useful information about the password.
-- **Does the program meet this requirement?** ✅ **Yes**
-- **Explanation:** The server never sees the actual password; it only sees cryptographic proofs, ensuring that no sensitive data is leaked.
+- **Does the program meet this requirement?** YES
+- **Explanation:** The server never sees the actual password. It only sees cryptographic proofs, ensuring that no sensitive data is leaked.
 
 ---
-
-### Conclusion
-This program successfully implements a Zero Knowledge Proof (ZKP) authentication system while maintaining security, correctness, and confidentiality.
-
-
-
