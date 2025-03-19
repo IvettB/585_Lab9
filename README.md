@@ -11,7 +11,7 @@
 - **Input Data:** User-entered password (first prompt)
 - **ZKP Step:** **Step 3 - Client creates a signature from their password and sends it to the server**
 - **Plain Language Description:**  
-At this step, the client (user) enters their password when prompted. However, the actual password is never sent to the server. Instead, the program uses a cryptographic function to transform the password into a digital signature. This signature acts as a mathematical proof that the client knows the correct password, without revealing what the password actually is. The transformation applied to the password is one-way, meaning that even if an attacker intercepted the signature, they would not be able to reverse it to determine the original password. This ensures that the password remains secret while still allowing the client to prove their knowledge of it.
+At this step, the client (user) enters their password when prompted. However, the actual password is never sent to the server. Instead, the program uses a cryptographic function to transform the password into a digital signature. This signature acts as a mathematical proof that the client knows the correct password, without revealing what the password actually is.
 
 ---
 
@@ -24,7 +24,7 @@ At this step, the client (user) enters their password when prompted. However, th
 - **Input Data:** The client’s signature from Step 3
 - **ZKP Step:** **Step 6 - Server sends a signed token back to the client**
 - **Plain Language Description:**  
-After getting the user’s signature, the server must check if they really know the password. To do this, the server creates a special challenge token, which is just a random code the user must sign next. The server also signs this token to make sure no one can change or fake it. This step stops attackers from reusing an old stolen signature to trick the system.
+After getting the user’s signature, the server has to check if they really know the password. To do this, the server creates a special challenge token, a random code the user must sign next. The server also signs this token to make sure no one can change or fake it.
 
 ---
 
@@ -53,7 +53,7 @@ The proof is sent to the server for final verification.
 - **Input Data:** The server's verification of the proof
 - **ZKP Step:** **Step 10 - Server verifies proof and sends authentication result**
 - **Plain Language Description:**  
-The server now checks the proof sent by the client. If the proof is valid, it confirms that the client knows the correct password and the authentication is successful. The server then sends back a `Success!` message. Since the client never actually sent the password, the server does not store or learn the actual password—only whether the proof is correct.
+The server now checks the proof sent by the client. If the proof is valid, it confirms that the client knows the correct password and the authentication is successful. The server then sends back a `Success!` message.
 
 ---
 
@@ -81,7 +81,7 @@ This step is identical to the Success version. The client generates a cryptograp
 - **Input Data:** The client’s signature from Step 3
 - **ZKP Step:** **Step 6 - Server sends a signed token back to the client**
 - **Plain Language Description:**  
-The server generates a new challenge token, just as in the Success version, and sends it to the client.
+The server generates a new challenge token, just like in the Success version, and sends it to the client.
 
 ---
 
@@ -95,7 +95,7 @@ eyJwYXJhbXMiOnsiYWxnIjoic2hhM18yNTYiLCJjdXJ2ZSI6InNlY3AyNTZrMSIsInMiOjY0Mjk1NTA0
 - **Input Data:** **(Incorrect)** second password + received token from Step 6
 - **ZKP Step:** **Step 8 - Client generates a proof using the password and token**
 - **Plain Language Description:**  
-In this run, the client mistakenly enters a different second password. Because the proof is created using this password, it will not match the expected proof that the server is looking for. Since the proof is incorrect, the server will recognize that the client does not know the correct password.
+In this version, the client enters a different second password. Because the proof is created using this password, it will not match the expected proof that the server is looking for. Since the proof is incorrect, the server will recognize that the client does not know the correct password.
 
 ---
 
@@ -108,7 +108,7 @@ In this run, the client mistakenly enters a different second password. Because t
 - **Input Data:** The server's verification of the proof
 - **ZKP Step:** **Step 10 - Server verifies proof and sends authentication result**
 - **Plain Language Description:**  
-The server verifies the proof and finds that it is invalid. This happens because the proof was generated using the wrong password, so it does not match what the server expected. As a result, authentication fails.
+The server verifies the proof and finds that it is invalid. This happens because the proof was generated using the wrong password, so it does not match what the server expected. As a result, the authentication fails.
 
 ---
 
